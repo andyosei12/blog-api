@@ -1,17 +1,13 @@
-const express = require('express');
-const morgan = require('morgan');
+const dotenv = require('dotenv');
 const logger = require('./logger');
+const db = require('./db');
+const app = require('./api');
 
-const app = express();
+dotenv.config();
+
 const port = process.env.PORT || 5000;
 
-app.use(morgan('dev'));
-
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Hello',
-  });
-});
+db.connect();
 
 app.listen(port, () => {
   logger.info(`Server running on port ${port}`);
