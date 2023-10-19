@@ -10,11 +10,13 @@ const BlogSchema = new Schema({
   state: { type: String, default: 'draft', enum: ['draft', 'published'] },
   read_count: { type: Number, default: 0 },
   reading_time: { type: Number },
-  tags: { type: [] },
+  tags: { type: [String], required: true },
   body: { type: String, required: true },
   user_id: { type: Schema.ObjectId, required: true },
   created_at: { type: Date, default: new Date() },
 });
+
+BlogSchema.index({ title: 'text', author: 'text', tags: 'text' });
 
 // before save
 BlogSchema.pre('save', async function (next) {
