@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const logger = require('../logger');
 const UserModel = require('../models/user');
+const BlogModel = require('../models/blog');
 
 dotenv.config();
 
@@ -89,7 +90,28 @@ const loginUser = async (req, res) => {
   }
 };
 
+const getAuthUserBlogs = async (req, res) => {
+  logger.info('(User) => getAuthUserBlogs process started');
+  try {
+    const userId = req.userId;
+
+    const blogs = await BlogModel.find({ user_id: userId });
+    logger.info('(User) => getAuthUserBlogs process successful');
+    return res.status(200).json({
+      blogs,
+      message: 'Success',
+    });
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).json({
+      message: error.message,
+      error: true,
+    });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
+  getAuthUserBlogs,
 };

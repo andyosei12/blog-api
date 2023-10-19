@@ -19,4 +19,10 @@ router.patch('/:id', verifyUser, updateBlog);
 router.patch('/:id/status', verifyUser, updateBlogState);
 router.delete('/:id', verifyUser, deleteBlog);
 
+router.get('*', (req, res) => {
+  res.status(404).json({
+    message: 'Route not found',
+  });
+});
+
 module.exports = router;
