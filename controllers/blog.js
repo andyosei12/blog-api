@@ -48,11 +48,13 @@ const getAllBlogs = async (req, res) => {
   logger.info('Getting all blogs');
 
   const queryObj = { ...req.query };
-  const excludedFields = ['page', 'sort', 'limit', 'fields'];
+  const excludedFields = ['page', 'sort', 'limit', 'fields', 'search'];
   excludedFields.forEach((el) => delete queryObj[el]);
-
   try {
-    let query = BlogModel.find({ ...queryObj, state: 'published' }).collation({
+    let query = BlogModel.find({
+      ...queryObj,
+      state: 'published',
+    }).collation({
       locale: 'en',
       strength: 2,
     });
@@ -78,11 +80,21 @@ const getAllBlogs = async (req, res) => {
       }
     }
 
+    // Searching
+    if (req.query.search) {
+      const search = req.query.search;
+      query = query.find({
+        $text: {
+          $search: search,
+        },
+      });
+    }
+
     const blogs = await query;
     logger.info('Blogs fetched successfully');
     return res.status(200).json({
       blogs,
-      message: 'Blogs fetched successfully',
+      message: 'Success',
     });
   } catch (error) {
     logger.error(error);
