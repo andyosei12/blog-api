@@ -1,7 +1,6 @@
 const Joi = require('joi');
 
 const validateUserCreation = async (req, res, next) => {
-  console.log(req.body);
   const schema = Joi.object({
     first_name: Joi.string().required(),
     last_name: Joi.string().required(),
