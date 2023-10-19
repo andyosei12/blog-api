@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const calculateReadingTime = require('../utils/calculateReadingTime');
 
 const Schema = mongoose.Schema;
 
@@ -18,9 +19,8 @@ const BlogSchema = new Schema({
 // before save
 BlogSchema.pre('save', async function (next) {
   const blog = this;
-  const time = 5000;
 
-  this.reading_time = time;
+  this.reading_time = calculateReadingTime(blog.body);
   next();
 });
 
