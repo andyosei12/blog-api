@@ -4,12 +4,15 @@ const logger = require('../logger');
 // Create a blog
 const createBlog = async (req, res) => {
   logger.info('Creating a new blog');
-  const blogTitle = req.body.title.toUpperCase();
+  const blogTitle = req.body.title;
   try {
     // Check if the blog already
     const existingBlog = await BlogModel.findOne({
       title: blogTitle,
       user_id: req.userId,
+    }).collation({
+      locale: 'en',
+      strength: 2,
     });
     if (existingBlog) {
       logger.warn('Blog already exists');

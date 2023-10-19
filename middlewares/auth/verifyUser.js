@@ -17,10 +17,8 @@ const verifyUser = (req, res, next) => {
         message: 'Token expired',
       });
     }
-    console.log(user);
     req.userId = user.id;
     req.username = user.first_name + ' ' + user.last_name;
-    console.log(req.username);
     next();
   } catch (error) {
     return res.status(401).json({
