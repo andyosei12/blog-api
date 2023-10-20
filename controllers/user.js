@@ -92,11 +92,42 @@ const loginUser = async (req, res) => {
 
 const getAuthUserBlogs = async (req, res) => {
   logger.info('(User) => getAuthUserBlogs process started');
+  const queryObj = { ...req.query };
+  const excludedFields = ['page', 'sort', 'limit'];
+  excludedFields.forEach((el) => delete queryObj[el]);
   try {
     const userId = req.userId;
+    let query = BlogModel.find({
+      ...queryObj,
+      user_id: userId,
+    }).collation({
+      locale: 'en',
+      strength: 2,
+    });
 
-    const blogs = await BlogModel.find({ user_id: userId });
-    logger.info('(User) => getAuthUserBlogs process successful');
+    // Sorting
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(',').join(' ');
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort('-created_at');
+    }
+
+    // Pagination
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 20;
+    const skip = (page - 1) * limit;
+    query = query.skip(skip).limit(limit);
+
+    if (req.query.page) {
+      const numBlogs = await BlogModel.countDocuments();
+      if (skip >= numBlogs) {
+        throw new Error('This page does not exist');
+      }
+    }
+
+    const blogs = await query;
+    logger.info('Blogs fetched successfully');
     return res.status(200).json({
       blogs,
       message: 'Success',
