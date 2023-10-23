@@ -4,26 +4,10 @@
     <%- include('./partials/head.ejs') %>
   </head>
   <body>
-    <header class="header">
-      <h1>Curated</h1>
-      <form method="post" action="/" class="search">
-        <input type="search" placeholder="Search" />
-      </form>
-      <% if (user) { %>
-      <div class="auth__actions">
-        <h2 class="profile"><%= user.firstName %></h2>
-        <a href="/user/logout" class="signup">Logout</a>
-      </div>
-      <% } else { %>
-      <div>
-        <a href="/user/login" class="login">Login</a>
-        <a href="/user/signup" class="signup">Sign up</a>
-      </div>
-      <% } %>
-    </header>
+    <%- include('./partials/appHeader.ejs') %>
     <main>
       <% if (user) { %>
-      <a href="#" class="blogs--owner">Manage Blogs</a>
+      <a href="/blogs" class="blogs--owner">Manage Blogs</a>
       <% } %>
       <section class="blogs">
         <table>

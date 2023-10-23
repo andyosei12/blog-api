@@ -1,22 +1,28 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
-const { getBlogs } = require('../services/blog.services');
+const { getBlogs, saveBlog } = require('../services/blog.services');
 const { registerUser, loginUser } = require('../services/user.services');
 
 const router = express.Router();
 router.use(cookieParser());
 
+// index page
 router.get('/', async (req, res) => {
   const blogs = await getBlogs();
   let user = null;
   if (req.cookies.jwt) {
-    const decodedValue = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
-    user = decodedValue;
+    try {
+      const decodedValue = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
+      user = decodedValue;
+    } catch (err) {
+      res.clearCookie('jwt');
+    }
   }
   res.render('index', { pageTitle: 'Curated', blogs: blogs.items, user });
 });
 
+// login page
 router.get('/user/login', async (req, res) => {
   res.render('login', { pageTitle: 'Login', error: null });
 });
@@ -34,6 +40,7 @@ router.post('/user/login', async (req, res) => {
   }
 });
 
+// signup page
 router.get('/user/signup', async (req, res) => {
   res.render('signup', { pageTitle: 'Signup', error: null });
 });
@@ -51,9 +58,55 @@ router.post('/user/signup', async (req, res) => {
   }
 });
 
+// logout
 router.get('/user/logout', (req, res) => {
   res.clearCookie('jwt');
   res.redirect('/');
+});
+
+// middleware to check if user is logged in
+router.use(async (req, res, next) => {
+  if (req.cookies) {
+    try {
+      const decodedValue = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
+
+      res.locals.user = decodedValue;
+      next();
+    } catch (error) {
+      res.redirect('/user/login');
+    }
+  } else {
+    res.redirect('/user/login');
+  }
+});
+
+router.get('/blogs', async (req, res) => {
+  res.render('blogs', { pageTitle: 'Curated | Blogs' });
+});
+
+router.get('/blogs/new', async (req, res) => {
+  res.render('new-blog', { pageTitle: 'Curated | New Blog', error: null });
+});
+
+router.post('/blogs/new', async (req, res) => {
+  const tags = req.body.tags.split(',');
+  const author = res.locals.user.firstName + ' ' + res.locals.user.lastName;
+
+  const blogDetails = {
+    ...req.body,
+    tags,
+    author,
+    user_id: res.locals.user.id,
+  };
+  const response = await saveBlog(blogDetails);
+  if (response.error) {
+    return res.render('new-blog', {
+      error: response.error,
+      pageTitle: 'Curated | New Blog',
+    });
+  } else {
+    res.redirect('/');
+  }
 });
 
 module.exports = router;

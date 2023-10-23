@@ -1,0 +1,17 @@
+<header class="header">
+  <a href="/" class="logo">Curated</a>
+  <form method="post" action="/" class="search">
+    <input type="search" placeholder="Search" />
+  </form>
+  <% if (user) { %>
+  <div class="auth__actions">
+    <h2 class="profile"><%= user.firstName %></h2>
+    <a href="/user/logout" class="signup">Logout</a>
+  </div>
+  <% } else { %>
+  <div>
+    <a href="/user/login" class="login">Login</a>
+    <a href="/user/signup" class="signup">Sign up</a>
+  </div>
+  <% } %>
+</header>

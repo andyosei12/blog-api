@@ -56,6 +56,22 @@ const getBlogs = async (reqQuery = {}) => {
   }
 };
 
+const saveBlog = async (blog) => {
+  try {
+    const newBlog = await BlogModel.create(blog);
+    return {
+      code: 201,
+      data: newBlog,
+    };
+  } catch (error) {
+    return {
+      code: 500,
+      error: error.message,
+    };
+  }
+};
+
 module.exports = {
   getBlogs,
+  saveBlog,
 };

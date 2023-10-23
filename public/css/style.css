@@ -204,3 +204,13 @@ table tbody a {
   align-items: center;
   gap: 1.8rem;
 }
+
+textarea {
+  padding: 1rem;
+  font-size: 1.6rem;
+  width: 100%;
+}
+
+textarea::placeholder {
+  font-size: 2rem;
+}
