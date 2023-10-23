@@ -34,6 +34,25 @@
             <td>
               <a href="#"><%= blog.created_at.toISOString().split('T')[0] %></a>
             </td>
+            <td style="display: flex; gap: 2rem">
+              <% if (blog.state === 'draft') { %>
+              <form method="post" action="/blogs/<%= blog._id %>/status">
+                <button class="delete-btn">
+                  <i class="fa-solid fa-paper-plane"></i>
+                </button>
+              </form>
+              <% } %>
+              <a href="#">
+                <i class="fa-solid fa-edit"></i>
+              </a>
+              <form>
+                <button class="delete-btn">
+                  <span style="color: tomato">
+                    <i class="fa-solid fa-trash"></i>
+                  </span>
+                </button>
+              </form>
+            </td>
           </tr>
           <% } %>
         </table>
