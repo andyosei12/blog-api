@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./partials/head.ejs') %>
+  </head>
+  <body>
+    <header class="header">
+      <h1>Curated</h1>
+      <form method="post" action="/" class="search">
+        <input type="search" placeholder="Search" />
+      </form>
+      <div>
+        <a href="#" class="login">Login</a>
+        <a href="#" class="signup">Sign up</a>
+      </div>
+    </header>
+    <main>
+      <a href="#" class="blogs--owner">Manage Blogs</a>
+      <section class="blogs">
+        <table>
+          <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Description</th>
+            <th>Tags</th>
+            <th>Date</th>
+          </tr>
+          <% if(blogs.length === 0) { %>
+          <tr>
+            <td colspan="5">No blogs found</td>
+          </tr>
+          <% } %> <% for (let blog of blogs) { %>
+          <tr>
+            <td><a href="#"><%= blog.title %></a></td>
+            <td>
+              <a href="#"><%= blog.author %></a>
+            </td>
+            <td><a href="#"><%= blog.description %></a></td>
+            <td>
+              <% for (let tag of blog.tags) { %>
+              <a href="#"><%= tag %></a>
+              <% } %>
+            </td>
+            <td>
+              <a href="#"><%= blog.created_at.toISOString().split('T')[0] %></a>
+            </td>
+          </tr>
+          <% } %>
+        </table>
+        <div class="page-btns">
+          <button>
+            <h3>PREV</h3>
+          </button>
+          <button>
+            <h3>NEXT</h3>
+          </button>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
