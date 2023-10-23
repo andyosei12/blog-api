@@ -1,7 +1,11 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
-const { getBlogs, saveBlog } = require('../services/blog.services');
+const {
+  getBlogs,
+  saveBlog,
+  updateBlogStatus,
+} = require('../services/blog.services');
 const { registerUser, loginUser } = require('../services/user.services');
 
 const router = express.Router();
@@ -102,11 +106,19 @@ router.post('/blogs/new', async (req, res) => {
   };
   const response = await saveBlog(blogDetails);
   if (response.error) {
-    return res.render('new-blog', {
+    res.render('new-blog', {
       error: response.error,
       pageTitle: 'Curated | New Blog',
     });
   } else {
+    res.redirect('/blogs');
+  }
+});
+
+router.post('/blogs/:id/status', async (req, res) => {
+  const id = req.params.id;
+  const response = await updateBlogStatus(id);
+  if (response.status === 200) {
     res.redirect('/blogs');
   }
 });
