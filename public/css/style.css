@@ -1,0 +1,130 @@
+:root {
+  --color-primary: #499ca7;
+  --color-primary-dark: #003049;
+  --color-accent: #f77f00;
+  --color-gray: #e6e8e6;
+  --color-black: #00171f;
+  --color-white: #fff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: sans-serif;
+  padding: 2rem 3rem;
+}
+
+a {
+  color: var(--color-black);
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search {
+  width: 30%;
+}
+
+.search input {
+  width: 100%;
+  padding: 1.5rem;
+  border: 2px solid var(--color-gray);
+  border-radius: 3rem;
+}
+
+.search input:focus {
+  outline: none;
+}
+
+.search input::placeholder {
+  color: var(--color-black);
+}
+
+.login {
+  margin-right: 2rem;
+  font-size: 1.5rem;
+}
+
+.login:hover {
+  border-bottom: 1px solid var(--color-accent);
+}
+
+.signup {
+  background-color: var(--color-primary);
+  font-size: 1.3rem;
+  color: var(--color-white);
+  padding: 1rem 2rem;
+  border-radius: 3rem;
+}
+
+.blogs--owner {
+  background-color: var(--color-primary);
+  font-size: 1.5rem;
+  color: var(--color-white);
+  padding: 1rem 2rem;
+  display: inline-block;
+  margin-top: 3rem;
+  border-radius: 0.5rem;
+  letter-spacing: 1px;
+}
+
+.blogs {
+  margin-top: 3rem;
+}
+
+table {
+  width: 100%;
+  font-size: 1.5rem;
+  text-align: left;
+  border-collapse: collapse;
+}
+
+table td {
+  padding: 2rem 0;
+}
+
+th {
+  padding-bottom: 1rem;
+}
+
+tr {
+  border-bottom: 2px solid #ddd;
+  padding: 1.5rem;
+}
+
+table tbody a {
+  display: block;
+}
+
+.page-btns {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.page-btns button:first-of-type {
+  opacity: 0.5;
+}
+
+.page-btns button:not(:first-of-type) {
+  color: var(--color-accent);
+}
