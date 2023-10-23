@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./partials/head') %>
+  </head>
+  <body>
+    <%- include('./partials/appHeader') %>
+    <main style="margin-top: 3rem">
+      <form action="/blogs/new" method="POST" class="auth-form">
+        <h1>Add a blog</h1>
+        <p class="error"><%= error %></p>
+        <input type="text" name="title" placeholder="Blog title" required />
+        <input
+          type="description"
+          name="description"
+          placeholder="Description"
+          required
+        />
+        <input
+          type="text"
+          name="tags"
+          placeholder="Tags (Separate with a comma)"
+          required
+        />
+        <!-- add textarea and cover the entire width -->
+        <textarea
+          name="body"
+          id="content"
+          rows="10"
+          placeholder="Content"
+          required
+        ></textarea>
+
+        <button type="submit" class="auth-btn">Submit</button>
+      </form>
+    </main>
+  </body>
+</html>

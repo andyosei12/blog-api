@@ -24,7 +24,12 @@ const registerUser = async ({ first_name, last_name, email, password }) => {
     });
 
     const token = jwt.sign(
-      { email: user.email, firstName: user.first_name, id: user._id },
+      {
+        email: user.email,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        id: user._id,
+      },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
@@ -66,7 +71,12 @@ const loginUser = async ({ email, password }) => {
       };
     }
     const token = jwt.sign(
-      { email: user.email, firstName: user.first_name, id: user.id },
+      {
+        email: user.email,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        id: user.id,
+      },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
