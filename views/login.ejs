@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <header><%- include('./partials/authHeader'); %></header>
+    <main>
+      <form action="/user/login" method="POST" class="auth-form">
+        <h1>Login</h1>
+        <p class="error"><%= error %></p>
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="password" name="password" placeholder="Password" />
+        <button type="submit" class="auth-btn">Login</button>
+        <p style="margin-top: 1rem; font-size: 1.5rem">
+          Don't have an account?
+          <a href="/user/signup">Sign up</a>
+        </p>
+      </form>
+    </main>
+  </body>
+</html>

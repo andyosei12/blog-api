@@ -9,13 +9,22 @@
       <form method="post" action="/" class="search">
         <input type="search" placeholder="Search" />
       </form>
-      <div>
-        <a href="#" class="login">Login</a>
-        <a href="#" class="signup">Sign up</a>
+      <% if (user) { %>
+      <div class="auth__actions">
+        <h2 class="profile"><%= user.firstName %></h2>
+        <a href="/user/logout" class="signup">Logout</a>
       </div>
+      <% } else { %>
+      <div>
+        <a href="/user/login" class="login">Login</a>
+        <a href="/user/signup" class="signup">Sign up</a>
+      </div>
+      <% } %>
     </header>
     <main>
+      <% if (user) { %>
       <a href="#" class="blogs--owner">Manage Blogs</a>
+      <% } %>
       <section class="blogs">
         <table>
           <tr>
