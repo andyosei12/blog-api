@@ -81,7 +81,9 @@ router.use(async (req, res, next) => {
 });
 
 router.get('/blogs', async (req, res) => {
-  res.render('blogs', { pageTitle: 'Curated | Blogs' });
+  const query = req.query;
+  const blogs = await getBlogs(query, res.locals.user.id);
+  res.render('blogs', { pageTitle: 'Curated | Blogs', blogs: blogs.items });
 });
 
 router.get('/blogs/new', async (req, res) => {
@@ -105,7 +107,7 @@ router.post('/blogs/new', async (req, res) => {
       pageTitle: 'Curated | New Blog',
     });
   } else {
-    res.redirect('/');
+    res.redirect('/blogs');
   }
 });
 

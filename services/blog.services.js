@@ -1,17 +1,28 @@
 const BlogModel = require('../models/blog');
 
-const getBlogs = async (reqQuery = {}) => {
+const getBlogs = async (reqQuery = {}, userId = null) => {
   const queryObj = { ...reqQuery };
   const excludedFields = ['page', 'sort', 'limit', 'fields', 'search'];
   excludedFields.forEach((el) => delete queryObj[el]);
   try {
-    let query = BlogModel.find({
-      ...queryObj,
-      state: 'published',
-    }).collation({
-      locale: 'en',
-      strength: 2,
-    });
+    let query;
+    if (!userId) {
+      query = BlogModel.find({
+        ...queryObj,
+        state: 'published',
+      }).collation({
+        locale: 'en',
+        strength: 2,
+      });
+    } else {
+      query = BlogModel.find({
+        ...queryObj,
+        user_id: userId,
+      }).collation({
+        locale: 'en',
+        strength: 2,
+      });
+    }
 
     // Sorting
     if (reqQuery.sort) {
