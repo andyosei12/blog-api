@@ -38,13 +38,6 @@ const getBlogs = async (reqQuery = {}, userId = null) => {
     const skip = (page - 1) * limit;
     query = query.skip(skip).limit(limit);
 
-    if (reqQuery.page) {
-      const numBlogs = await BlogModel.countDocuments();
-      if (skip >= numBlogs) {
-        throw new Error('This page does not exist');
-      }
-    }
-
     // Searching
     if (reqQuery.search) {
       const search = reqQuery.search;
@@ -75,6 +68,12 @@ const saveBlog = async (blog) => {
       data: newBlog,
     };
   } catch (error) {
+    if (error.code === 11000) {
+      return {
+        code: 409,
+        error: 'Blog already exists',
+      };
+    }
     return {
       code: 500,
       error: error.message,

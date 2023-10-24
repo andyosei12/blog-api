@@ -69,7 +69,7 @@ router.post('/user/signup', async (req, res) => {
 // Get a blog
 router.get('/blogs/:id', async (req, res) => {
   const { blog } = await findBlogAndUpdate(req.params.id);
-  const tags = blog.tags.toLocaleString();
+  const tags = blog?.tags.toLocaleString();
   const item = { ...blog._doc, tags };
   let user = null;
   if (req.cookies.jwt) {
@@ -119,11 +119,12 @@ router.get('/blogs', async (req, res) => {
   });
 });
 
-router.get('/blogs/new', async (req, res) => {
+router.get('/user/blogs/new', async (req, res) => {
+  console.log('helloo');
   res.render('new-blog', { pageTitle: 'Curated | New Blog', error: null });
 });
 
-router.post('/blogs/new', async (req, res) => {
+router.post('/user/blogs/new', async (req, res) => {
   const tags = req.body.tags.split(',');
   const author = res.locals.user.firstName + ' ' + res.locals.user.lastName;
 
