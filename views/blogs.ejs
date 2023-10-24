@@ -13,7 +13,7 @@
           align-items: center;
         "
       >
-        <a href="/blogs/new" class="blogs--owner">Add Blog</a>
+        <a href="/user/blogs/new" class="blogs--owner">Add Blog</a>
         <form class="blog-order">
           <h1 style="margin-bottom: 1rem">Filter by</h1>
           <div style="display: flex; gap: 1rem">
@@ -42,6 +42,7 @@
           <tr>
             <th>Title</th>
             <th>Description</th>
+            <th>Read Count</th>
             <th>Tags</th>
             <th>Status</th>
             <th>Date</th>
@@ -61,6 +62,11 @@
             <td>
               <a href="/user/blogs/<%= blog._id %>/details"
                 ><%= blog.description %></a
+              >
+            </td>
+            <td>
+              <a href="/user/blogs/<%= blog._id %>/details"
+                ><%= blog.read_count %></a
               >
             </td>
             <td>
@@ -101,10 +107,10 @@
           <% } %>
         </table>
         <div class="page-btns">
-          <button>
+          <button class="prevBtn">
             <h3>PREV</h3>
           </button>
-          <button>
+          <button class="nextBtn">
             <h3>NEXT</h3>
           </button>
         </div>
@@ -115,7 +121,8 @@
 
 <script>
   const order = document.querySelector('.blog-order');
-
+  const prevBtn = document.querySelector('.prevBtn');
+  const nextBtn = document.querySelector('.nextBtn');
   order.addEventListener('change', (e) => {
     e.preventDefault();
 
@@ -126,5 +133,40 @@
       return;
     }
     window.location.href = `/blogs?${query}`;
+  });
+
+  nextBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    console.log('clicked');
+
+    const query = new URLSearchParams(window.location.search);
+    const page = query.get('page');
+
+    if (!page) {
+      window.location.href = `/blogs/?page=2`;
+      return;
+    }
+
+    window.location.href = `/blogs/?page=${parseInt(page) + 1}`;
+  });
+
+  // Go to previous page
+  prevBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const query = new URLSearchParams(window.location.search);
+    const page = query.get('page');
+
+    if (!page) {
+      window.location.href = `/blogs/?page=1`;
+      return;
+    }
+
+    if (page === '1') {
+      window.location.href = `/blogs`;
+      return;
+    }
+
+    window.location.href = `/blogs/?page=${parseInt(page) - 1}`;
   });
 </script>

@@ -59,7 +59,9 @@
               <a href="/blogs/<%= blog._id %>"><%= blog.read_count %></a>
             </td>
             <td>
-              <a href="/blogs/<%= blog._id %>"><%= blog.reading_time %>mins</a>
+              <a href="/blogs/<%= blog._id %>"
+                ><%= blog.reading_time %> min(s)</a
+              >
             </td>
             <td>
               <a href="/blogs/<%= blog._id %>"><%= blog.description %></a>
@@ -78,10 +80,10 @@
           <% } %>
         </table>
         <div class="page-btns">
-          <button>
+          <button class="prevBtn">
             <h3>PREV</h3>
           </button>
-          <button>
+          <button class="nextBtn">
             <h3>NEXT</h3>
           </button>
         </div>
@@ -93,9 +95,47 @@
 <script>
   const order = document.querySelector('.blog-order');
   const radioInput = document.querySelector('input[type=radio]');
+  const prevBtn = document.querySelector('.prevBtn');
+  const nextBtn = document.querySelector('.nextBtn');
 
   order.addEventListener('change', (e) => {
     const value = e.target.value;
     window.location.href = `/?sort=${value}`;
+  });
+
+  // Go to next page
+  nextBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    console.log('clicked');
+
+    const query = new URLSearchParams(window.location.search);
+    const page = query.get('page');
+
+    if (!page) {
+      window.location.href = `/?page=2`;
+      return;
+    }
+
+    window.location.href = `/?page=${parseInt(page) + 1}`;
+  });
+
+  // Go to previous page
+  prevBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const query = new URLSearchParams(window.location.search);
+    const page = query.get('page');
+
+    if (!page) {
+      window.location.href = `/?page=1`;
+      return;
+    }
+
+    if (page === '1') {
+      window.location.href = `/`;
+      return;
+    }
+
+    window.location.href = `/?page=${parseInt(page) - 1}`;
   });
 </script>
