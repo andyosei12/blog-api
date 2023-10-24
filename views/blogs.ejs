@@ -6,7 +6,37 @@
   <body>
     <%- include('./partials/appHeader') %>
     <main>
-      <a href="/blogs/new" class="blogs--owner">Add Blog</a>
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
+        <a href="/blogs/new" class="blogs--owner">Add Blog</a>
+        <form class="blog-order">
+          <h1 style="margin-bottom: 1rem">Filter by</h1>
+          <div style="display: flex; gap: 1rem">
+            <div style="font-size: 1.5rem">
+              <input type="radio" name="state" id="all" value="all" />
+              <label for="all">All</label>
+            </div>
+            <div style="font-size: 1.5rem">
+              <input type="radio" name="state" id="draft" value="draft" />
+              <label for="draft">Drafts</label>
+            </div>
+            <div style="font-size: 1.5rem">
+              <input
+                type="radio"
+                name="state"
+                id="published"
+                value="published"
+              />
+              <label for="published">Published</label>
+            </div>
+          </div>
+        </form>
+      </div>
       <section class="blogs">
         <table>
           <tr>
@@ -68,3 +98,19 @@
     </main>
   </body>
 </html>
+
+<script>
+  const order = document.querySelector('.blog-order');
+
+  order.addEventListener('change', (e) => {
+    e.preventDefault();
+
+    const query = new URLSearchParams(new FormData(order)).toString();
+
+    if (query === 'state=all') {
+      window.location.href = '/blogs';
+      return;
+    }
+    window.location.href = `/blogs?${query}`;
+  });
+</script>
