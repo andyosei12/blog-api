@@ -6,15 +6,42 @@
   <body>
     <%- include('./partials/appHeader.ejs') %>
     <main>
-      <% if (user) { %>
-      <a href="/blogs" class="blogs--owner">Manage Blogs</a>
-      <% } %>
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
+        <% if (user) { %>
+        <a href="/blogs" class="blogs--owner">Manage Blogs</a>
+        <% } %>
+
+        <form class="blog-order">
+          <h1 style="margin-bottom: 1rem">Sort by</h1>
+          <div style="display: flex; gap: 1rem">
+            <div style="font-size: 1.5rem">
+              <input type="radio" name="order" id="date" value="created_at" />
+              <label for="date">Created at</label>
+            </div>
+            <div style="font-size: 1.5rem">
+              <input type="radio" name="order" id="count" value="read_count" />
+              <label for="count">Read Count</label>
+            </div>
+            <div style="font-size: 1.5rem">
+              <input type="radio" name="order" id="time" value="reading_time" />
+              <label for="time">Reading Time</label>
+            </div>
+          </div>
+        </form>
+      </div>
       <section class="blogs">
         <table>
           <tr>
             <th>Title</th>
             <th>Author</th>
-            <th>Description</th>
+            <th>Read Count</th>
+            <th>Reading Time</th>
             <th>Tags</th>
             <th>Date</th>
           </tr>
@@ -27,6 +54,12 @@
             <td><a href="#"><%= blog.title %></a></td>
             <td>
               <a href="#"><%= blog.author %></a>
+            </td>
+            <td>
+              <a href="#"><%= blog.read_count %></a>
+            </td>
+            <td>
+              <a href="#"><%= blog.reading_time %>mins</a>
             </td>
             <td><a href="#"><%= blog.description %></a></td>
             <td>
@@ -52,3 +85,13 @@
     </main>
   </body>
 </html>
+
+<script>
+  const order = document.querySelector('.blog-order');
+  const radioInput = document.querySelector('input[type=radio]');
+
+  order.addEventListener('change', (e) => {
+    const value = e.target.value;
+    window.location.href = `/?sort=${value}`;
+  });
+</script>
