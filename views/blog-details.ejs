@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./partials/head') %>
+  </head>
+  <body>
+    <%- include('./partials/appHeader') %>
+    <main class="detail-container">
+      <h1><%= item.title %></h1>
+      <h3 class="author">By <%= item.author %></h3>
+      <p><%= item.reading_time %> mins read</p>
+
+      <div class="detail-content">
+        <p><%- item.body %></p>
+      </div>
+    </main>
+  </body>
+</html>

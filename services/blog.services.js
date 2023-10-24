@@ -82,6 +82,25 @@ const saveBlog = async (blog) => {
   }
 };
 
+const findBlogAndUpdate = async (id) => {
+  try {
+    const blog = await BlogModel.findOneAndUpdate(
+      { _id: id },
+      { $inc: { read_count: 1 } },
+      { new: true }
+    );
+    return {
+      blog,
+      status: 200,
+    };
+  } catch (error) {
+    return {
+      error: true,
+      message: error.message,
+    };
+  }
+};
+
 const getBlog = async (id) => {
   try {
     const blog = await BlogModel.findOne({ _id: id });
@@ -157,4 +176,5 @@ module.exports = {
   getBlog,
   updateBlog,
   deleteBlog,
+  findBlogAndUpdate,
 };

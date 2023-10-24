@@ -8,6 +8,7 @@ const {
   getBlog,
   updateBlog,
   deleteBlog,
+  findBlogAndUpdate,
 } = require('../services/blog.services');
 const { registerUser, loginUser } = require('../services/user.services');
 
@@ -63,6 +64,27 @@ router.post('/user/signup', async (req, res) => {
     res.cookie('jwt', response.data.token);
     res.redirect('/');
   }
+});
+
+// Get a blog
+router.get('/blogs/:id', async (req, res) => {
+  const { blog } = await findBlogAndUpdate(req.params.id);
+  const tags = blog.tags.toLocaleString();
+  const item = { ...blog._doc, tags };
+  let user = null;
+  if (req.cookies.jwt) {
+    try {
+      const decodedValue = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
+      user = decodedValue;
+    } catch (err) {
+      res.clearCookie('jwt');
+    }
+  }
+  res.render('blog-details', {
+    pageTitle: 'Curated | Blog Details',
+    item,
+    user,
+  });
 });
 
 // logout
@@ -137,6 +159,18 @@ router.get('/user/blogs/:id', async (req, res) => {
 
   res.render('edit-blog', {
     pageTitle: 'Curated | Edit Blog',
+    error: null,
+    item,
+  });
+});
+
+router.get('/user/blogs/:id/details', async (req, res) => {
+  const { blog } = await getBlog(req.params.id);
+  const tags = blog.tags.toLocaleString();
+  const item = { ...blog._doc, tags };
+
+  res.render('blog-details', {
+    pageTitle: 'Curated | Blog Details',
     error: null,
     item,
   });
