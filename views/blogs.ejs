@@ -45,7 +45,7 @@
               <a href="/user/blogs/<%= blog._id %>">
                 <i class="fa-solid fa-edit"></i>
               </a>
-              <form>
+              <form method="post" action="/user/blogs/<%= blog._id %>/delete">
                 <button class="delete-btn">
                   <span style="color: tomato">
                     <i class="fa-solid fa-trash"></i>
