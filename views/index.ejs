@@ -51,24 +51,28 @@
           </tr>
           <% } %> <% for (let blog of blogs) { %>
           <tr>
-            <td><a href="#"><%= blog.title %></a></td>
+            <td><a href="/blogs/<%= blog._id %>"><%= blog.title %></a></td>
             <td>
-              <a href="#"><%= blog.author %></a>
+              <a href="/blogs/<%= blog._id %>"><%= blog.author %></a>
             </td>
             <td>
-              <a href="#"><%= blog.read_count %></a>
+              <a href="/blogs/<%= blog._id %>"><%= blog.read_count %></a>
             </td>
             <td>
-              <a href="#"><%= blog.reading_time %>mins</a>
+              <a href="/blogs/<%= blog._id %>"><%= blog.reading_time %>mins</a>
             </td>
-            <td><a href="#"><%= blog.description %></a></td>
+            <td>
+              <a href="/blogs/<%= blog._id %>"><%= blog.description %></a>
+            </td>
             <td>
               <% for (let tag of blog.tags) { %>
-              <a href="#"><%= tag %></a>
+              <a href="/blogs/<%= blog._id %>"><%= tag %></a>
               <% } %>
             </td>
             <td>
-              <a href="#"><%= blog.created_at.toISOString().split('T')[0] %></a>
+              <a href="/blogs/<%= blog._id %>"
+                ><%= blog.created_at.toISOString().split('T')[0] %></a
+              >
             </td>
           </tr>
           <% } %>

@@ -53,16 +53,30 @@
           </tr>
           <% } %> <% for (let blog of blogs) { %>
           <tr>
-            <td><a href="#"><%= blog.title %></a></td>
-            <td><a href="#"><%= blog.description %></a></td>
+            <td>
+              <a href="/user/blogs/<%= blog._id %>/details"
+                ><%= blog.title %></a
+              >
+            </td>
+            <td>
+              <a href="/user/blogs/<%= blog._id %>/details"
+                ><%= blog.description %></a
+              >
+            </td>
             <td>
               <% for (let tag of blog.tags) { %>
-              <a href="#"><%= tag %></a>
+              <a href="/user/blogs/<%= blog._id %>/details"><%= tag %></a>
               <% } %>
             </td>
-            <td><a href="#"><%= blog.state %></a></td>
             <td>
-              <a href="#"><%= blog.created_at.toISOString().split('T')[0] %></a>
+              <a href="/user/blogs/<%= blog._id %>/details"
+                ><%= blog.state %></a
+              >
+            </td>
+            <td>
+              <a href="/user/blogs/<%= blog._id %>/details"
+                ><%= blog.created_at.toISOString().split('T')[0] %></a
+              >
             </td>
             <td style="display: flex; gap: 2rem">
               <% if (blog.state === 'draft') { %>
