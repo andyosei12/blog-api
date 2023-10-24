@@ -7,6 +7,7 @@ const {
   updateBlogStatus,
   getBlog,
   updateBlog,
+  deleteBlog,
 } = require('../services/blog.services');
 const { registerUser, loginUser } = require('../services/user.services');
 
@@ -89,7 +90,11 @@ router.use(async (req, res, next) => {
 router.get('/blogs', async (req, res) => {
   const query = req.query;
   const blogs = await getBlogs(query, res.locals.user.id);
-  res.render('blogs', { pageTitle: 'Curated | Blogs', blogs: blogs.items });
+  res.render('blogs', {
+    pageTitle: 'Curated | Blogs',
+    blogs: blogs.items,
+    error: null,
+  });
 });
 
 router.get('/blogs/new', async (req, res) => {
@@ -141,6 +146,19 @@ router.post('/user/blogs/:id', async (req, res) => {
   const response = await updateBlog(req.body, req.params.id);
   if (response.error) {
     res.render('edit-blog', {
+      error: response.error,
+      pageTitle: 'Curated | Edit Blog',
+    });
+  } else {
+    res.redirect('/blogs');
+  }
+});
+
+// delete blog
+router.post('/user/blogs/:id/delete', async (req, res) => {
+  const response = await deleteBlog(req.params.id);
+  if (response.error) {
+    res.render('blogs', {
       error: response.error,
       pageTitle: 'Curated | Edit Blog',
     });

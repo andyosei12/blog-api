@@ -135,10 +135,26 @@ const updateBlog = async (body, id) => {
   }
 };
 
+const deleteBlog = async (id) => {
+  try {
+    await BlogModel.findOneAndDelete({ _id: id });
+    return {
+      message: 'Blog deleted successfully',
+      status: 200,
+    };
+  } catch (error) {
+    return {
+      error: true,
+      message: error.message,
+    };
+  }
+};
+
 module.exports = {
   getBlogs,
   saveBlog,
   updateBlogStatus,
   getBlog,
   updateBlog,
+  deleteBlog,
 };
