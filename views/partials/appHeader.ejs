@@ -1,6 +1,6 @@
 <header class="header">
   <a href="/" class="logo">Curated</a>
-  <form method="post" action="/" class="search">
+  <form method="get" action="/?search=jane" class="search">
     <input type="search" placeholder="Search" />
   </form>
   <% if (user) { %>
@@ -15,3 +15,14 @@
   </div>
   <% } %>
 </header>
+
+<script>
+  const search = document.querySelector('.search');
+  const input = document.querySelector('input[type=search]');
+
+  search.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const query = input.value;
+    window.location.href = `/?search=${query}`;
+  });
+</script>
