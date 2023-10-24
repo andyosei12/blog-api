@@ -82,6 +82,21 @@ const saveBlog = async (blog) => {
   }
 };
 
+const getBlog = async (id) => {
+  try {
+    const blog = await BlogModel.findOne({ _id: id });
+    return {
+      blog,
+      status: 200,
+    };
+  } catch {
+    return {
+      error: true,
+      message: error.message,
+    };
+  }
+};
+
 const updateBlogStatus = async (id) => {
   try {
     const blog = await BlogModel.findOneAndUpdate(
@@ -101,8 +116,29 @@ const updateBlogStatus = async (id) => {
   }
 };
 
+const updateBlog = async (body, id) => {
+  try {
+    const blog = await BlogModel.findOneAndUpdate(
+      { _id: id },
+      { ...body },
+      { new: true }
+    );
+    return {
+      blog,
+      status: 200,
+    };
+  } catch (error) {
+    return {
+      error: true,
+      message: error.message,
+    };
+  }
+};
+
 module.exports = {
   getBlogs,
   saveBlog,
   updateBlogStatus,
+  getBlog,
+  updateBlog,
 };

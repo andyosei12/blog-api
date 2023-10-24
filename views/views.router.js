@@ -5,6 +5,8 @@ const {
   getBlogs,
   saveBlog,
   updateBlogStatus,
+  getBlog,
+  updateBlog,
 } = require('../services/blog.services');
 const { registerUser, loginUser } = require('../services/user.services');
 
@@ -119,6 +121,30 @@ router.post('/blogs/:id/status', async (req, res) => {
   const id = req.params.id;
   const response = await updateBlogStatus(id);
   if (response.status === 200) {
+    res.redirect('/blogs');
+  }
+});
+
+router.get('/user/blogs/:id', async (req, res) => {
+  const { blog } = await getBlog(req.params.id);
+  const tags = blog.tags.toLocaleString();
+  const item = { ...blog._doc, tags };
+
+  res.render('edit-blog', {
+    pageTitle: 'Curated | Edit Blog',
+    error: null,
+    item,
+  });
+});
+
+router.post('/user/blogs/:id', async (req, res) => {
+  const response = await updateBlog(req.body, req.params.id);
+  if (response.error) {
+    res.render('edit-blog', {
+      error: response.error,
+      pageTitle: 'Curated | Edit Blog',
+    });
+  } else {
     res.redirect('/blogs');
   }
 });
