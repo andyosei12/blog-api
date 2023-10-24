@@ -16,7 +16,7 @@ router.use(cookieParser());
 
 // index page
 router.get('/', async (req, res) => {
-  const blogs = await getBlogs();
+  const blogs = await getBlogs(req.query);
   let user = null;
   if (req.cookies.jwt) {
     try {
