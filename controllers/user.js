@@ -1,10 +1,8 @@
-const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
 const logger = require('../logger');
 const UserModel = require('../models/user');
 const BlogModel = require('../models/blog');
-
-dotenv.config();
+const APIFeatures = require('../utils/apiFeatures');
+const createToken = require('../utils/createToken');
 
 const registerUser = async (req, res) => {
   //   Check if email exists
@@ -22,16 +20,7 @@ const registerUser = async (req, res) => {
       ...req.body,
     });
 
-    const token = jwt.sign(
-      {
-        email: user.email,
-        id: user._id,
-        first_name: user.first_name,
-        last_name: user.last_name,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
+    const token = createToken(user);
     logger.info('(User) => register process successful');
     return res.status(201).json({
       token,
@@ -66,17 +55,7 @@ const loginUser = async (req, res) => {
         message: 'Email or password is not correct',
       });
     }
-    const token = jwt.sign(
-      {
-        email: user.email,
-        id: user.id,
-        first_name: user.first_name,
-        last_name: user.last_name,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-
+    const token = createToken(user);
     return res.status(200).json({
       message: 'Login successfully',
       token,
@@ -92,41 +71,14 @@ const loginUser = async (req, res) => {
 
 const getAuthUserBlogs = async (req, res) => {
   logger.info('(User) => getAuthUserBlogs process started');
-  const queryObj = { ...req.query };
-  const excludedFields = ['page', 'sort', 'limit'];
-  excludedFields.forEach((el) => delete queryObj[el]);
   try {
     const userId = req.userId;
-    let query = BlogModel.find({
-      ...queryObj,
-      user_id: userId,
-    }).collation({
-      locale: 'en',
-      strength: 2,
-    });
-
-    // Sorting
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(',').join(' ');
-      query = query.sort(sortBy);
-    } else {
-      query = query.sort('-created_at');
-    }
-
-    // Pagination
-    const page = req.query.page * 1 || 1;
-    const limit = req.query.limit * 1 || 20;
-    const skip = (page - 1) * limit;
-    query = query.skip(skip).limit(limit);
-
-    if (req.query.page) {
-      const numBlogs = await BlogModel.countDocuments();
-      if (skip >= numBlogs) {
-        throw new Error('This page does not exist');
-      }
-    }
-
-    const blogs = await query;
+    const features = new APIFeatures(BlogModel.find(), req.query)
+      .filter({ user_id: userId })
+      .sort()
+      .paginate()
+      .search();
+    const blogs = await features.query;
     logger.info('Blogs fetched successfully');
     return res.status(200).json({
       blogs,

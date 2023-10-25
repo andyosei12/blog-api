@@ -15,7 +15,7 @@
       >
         <a href="/user/blogs/new" class="blogs--owner">Add Blog</a>
         <form class="blog-order">
-          <h1 style="margin-bottom: 1rem">Filter by</h1>
+          <h1 style="margin-bottom: 1rem; opacity: 0.5">Filter by</h1>
           <div style="display: flex; gap: 1rem">
             <div style="font-size: 1.5rem">
               <input type="radio" name="state" id="all" value="all" />
@@ -137,7 +137,6 @@
 
   nextBtn.addEventListener('click', (e) => {
     e.preventDefault();
-    console.log('clicked');
 
     const query = new URLSearchParams(window.location.search);
     const page = query.get('page');

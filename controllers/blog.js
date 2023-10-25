@@ -1,12 +1,13 @@
 const BlogModel = require('../models/blog');
 const logger = require('../logger');
+const APIFeatures = require('../utils/apiFeatures');
 
 // Create a blog
 const createBlog = async (req, res) => {
   logger.info('Creating a new blog');
   const blogTitle = req.body.title;
   try {
-    // Check if the blog already
+    // Check if the blog already esist
     const existingBlog = await BlogModel.findOne({
       title: blogTitle,
       user_id: req.userId,
@@ -47,50 +48,14 @@ const createBlog = async (req, res) => {
 const getAllBlogs = async (req, res) => {
   logger.info('Getting all blogs');
 
-  const queryObj = { ...req.query };
-  const excludedFields = ['page', 'sort', 'limit', 'fields', 'search'];
-  excludedFields.forEach((el) => delete queryObj[el]);
   try {
-    let query = BlogModel.find({
-      ...queryObj,
-      state: 'published',
-    }).collation({
-      locale: 'en',
-      strength: 2,
-    });
-
-    // Sorting
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(',').join(' ');
-      query = query.sort(sortBy);
-    } else {
-      query = query.sort('-created_at');
-    }
-
-    // Pagination
-    const page = req.query.page * 1 || 1;
-    const limit = req.query.limit * 1 || 20;
-    const skip = (page - 1) * limit;
-    query = query.skip(skip).limit(limit);
-
-    if (req.query.page) {
-      const numBlogs = await BlogModel.countDocuments();
-      if (skip >= numBlogs) {
-        throw new Error('This page does not exist');
-      }
-    }
-
-    // Searching
-    if (req.query.search) {
-      const search = req.query.search;
-      query = query.find({
-        $text: {
-          $search: search,
-        },
-      });
-    }
-
-    const blogs = await query;
+    // Execution
+    const features = new APIFeatures(BlogModel.find(), req.query)
+      .filter({ state: 'published' })
+      .sort()
+      .paginate()
+      .search();
+    const blogs = await features.query;
     logger.info('Blogs fetched successfully');
     return res.status(200).json({
       blogs,
@@ -98,7 +63,7 @@ const getAllBlogs = async (req, res) => {
     });
   } catch (error) {
     logger.error(error);
-    res.status(404).json({
+    res.status(500).json({
       error: true,
       message: error.message,
     });
