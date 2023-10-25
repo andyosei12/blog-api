@@ -35,6 +35,7 @@ router.get('/user/login', async (req, res) => {
   res.render('login', { pageTitle: 'Login', error: null });
 });
 
+// login user
 router.post('/user/login', async (req, res) => {
   const response = await loginUser(req.body);
   if (response.error) {
@@ -53,6 +54,7 @@ router.get('/user/signup', async (req, res) => {
   res.render('signup', { pageTitle: 'Signup', error: null });
 });
 
+// signup user
 router.post('/user/signup', async (req, res) => {
   const response = await registerUser(req.body);
   if (response.error) {
@@ -69,7 +71,7 @@ router.post('/user/signup', async (req, res) => {
 // Get a blog
 router.get('/blogs/:id', async (req, res) => {
   const { blog } = await findBlogAndUpdate(req.params.id);
-  const tags = blog?.tags.toLocaleString();
+  const tags = blog.tags.toLocaleString();
   const item = { ...blog._doc, tags };
   let user = null;
   if (req.cookies.jwt) {
@@ -109,6 +111,7 @@ router.use(async (req, res, next) => {
   }
 });
 
+// Get all blogs of a logged in user
 router.get('/blogs', async (req, res) => {
   const query = req.query;
   const blogs = await getBlogs(query, res.locals.user.id);
@@ -119,11 +122,13 @@ router.get('/blogs', async (req, res) => {
   });
 });
 
+// route to create a new blog
 router.get('/user/blogs/new', async (req, res) => {
   console.log('helloo');
   res.render('new-blog', { pageTitle: 'Curated | New Blog', error: null });
 });
 
+// Add a blog
 router.post('/user/blogs/new', async (req, res) => {
   const tags = req.body.tags.split(',');
   const author = res.locals.user.firstName + ' ' + res.locals.user.lastName;
@@ -145,6 +150,7 @@ router.post('/user/blogs/new', async (req, res) => {
   }
 });
 
+// update blog status
 router.post('/blogs/:id/status', async (req, res) => {
   const id = req.params.id;
   const response = await updateBlogStatus(id);
@@ -153,6 +159,7 @@ router.post('/blogs/:id/status', async (req, res) => {
   }
 });
 
+// edit blog
 router.get('/user/blogs/:id', async (req, res) => {
   const { blog } = await getBlog(req.params.id);
   const tags = blog.tags.toLocaleString();
@@ -165,6 +172,7 @@ router.get('/user/blogs/:id', async (req, res) => {
   });
 });
 
+// Get a blog details
 router.get('/user/blogs/:id/details', async (req, res) => {
   const { blog } = await getBlog(req.params.id);
   const tags = blog.tags.toLocaleString();
@@ -177,6 +185,7 @@ router.get('/user/blogs/:id/details', async (req, res) => {
   });
 });
 
+// update blog
 router.post('/user/blogs/:id', async (req, res) => {
   const response = await updateBlog(req.body, req.params.id);
   if (response.error) {

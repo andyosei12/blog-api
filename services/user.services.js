@@ -1,8 +1,6 @@
-const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const User = require('../models/user');
-
-dotenv.config();
+const createToken = require('../utils/createToken');
 
 const registerUser = async ({ first_name, last_name, email, password }) => {
   //   Check if email exists
@@ -23,16 +21,7 @@ const registerUser = async ({ first_name, last_name, email, password }) => {
       password,
     });
 
-    const token = jwt.sign(
-      {
-        email: user.email,
-        firstName: user.first_name,
-        lastName: user.last_name,
-        id: user._id,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
+    const token = createToken(user);
     return {
       code: 201,
       data: {
@@ -70,16 +59,7 @@ const loginUser = async ({ email, password }) => {
         message: 'Email or password is not correct',
       };
     }
-    const token = jwt.sign(
-      {
-        email: user.email,
-        firstName: user.first_name,
-        lastName: user.last_name,
-        id: user.id,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
+    const token = createToken(user);
     return {
       code: 200,
       data: {

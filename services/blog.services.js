@@ -1,58 +1,29 @@
 const BlogModel = require('../models/blog');
+const APIFeatures = require('../utils/apiFeatures');
 
 const getBlogs = async (reqQuery = {}, userId = null) => {
-  const queryObj = { ...reqQuery };
-  const excludedFields = ['page', 'sort', 'limit', 'fields', 'search'];
-  excludedFields.forEach((el) => delete queryObj[el]);
   try {
-    let query;
+    let features;
     if (!userId) {
-      query = BlogModel.find({
-        ...queryObj,
-        state: 'published',
-      }).collation({
-        locale: 'en',
-        strength: 2,
-      });
+      features = new APIFeatures(BlogModel.find(), reqQuery)
+        .filter({ state: 'published' })
+        .sort()
+        .paginate()
+        .search();
     } else {
-      query = BlogModel.find({
-        ...queryObj,
-        user_id: userId,
-      }).collation({
-        locale: 'en',
-        strength: 2,
-      });
+      features = new APIFeatures(BlogModel.find(), reqQuery)
+        .filter({ user_id: userId })
+        .sort()
+        .paginate()
+        .search();
     }
-
-    // Sorting
-    if (reqQuery.sort) {
-      const sortBy = reqQuery.sort.split(',').join(' ');
-      query = query.sort(sortBy);
-    } else {
-      query = query.sort('-created_at');
-    }
-
-    // Pagination
-    const page = reqQuery.page * 1 || 1;
-    const limit = reqQuery.limit * 1 || 20;
-    const skip = (page - 1) * limit;
-    query = query.skip(skip).limit(limit);
-
-    // Searching
-    if (reqQuery.search) {
-      const search = reqQuery.search;
-      query = query.find({
-        $text: {
-          $search: search,
-        },
-      });
-    }
-    const blogs = await query;
+    const blogs = await features.query;
     return {
       code: 200,
       items: blogs,
     };
   } catch (error) {
+    console.log(error.message);
     return {
       code: 500,
       error: error.message,
