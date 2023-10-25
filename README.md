@@ -29,10 +29,11 @@ The following are routes and requirements for different endpoints of our api
 - _GET: /api/v1/blogs_ => Endpoint for fetching all blogs whether logged in or not logged in
 
 - _GET: /api/v1/user/blogs_ => Endpoint for fetching all blogs of an authenticated user. It is required to pass in the jwt token in the authorization header to be able to get access to the blogs of a particaular user.
-  You can sort by the read_count,reading_time and created at. By default blogs are sorted by created_at.
-  Results are limited to 20 documents per page
-  You can also search by author,title and tags
-  You can query by the state of the blog when a user is logged in (either draft of published).
+
+You can sort by the read_count,reading_time and created at. By default blogs are sorted by created_at.
+Results are limited to 20 documents per page
+You can also search by author,title and tags
+You can query by the state of the blog when a user is logged in (either draft of published).
 
 - _POST: /api/v1/blogs_ => Endpoint for creating a blog. Authorization header is also required to create task. The title, description,tags and body fields are required and these are the only fields needed to created a blog. The author of the blog is generated automatically.
 
