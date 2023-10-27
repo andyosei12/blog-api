@@ -14,6 +14,14 @@ const registerUser = async ({ first_name, last_name, email, password }) => {
       };
     }
 
+    if (password.length < 8) {
+      return {
+        code: 400,
+        error: true,
+        message: 'Password must be at least 8 characters',
+      };
+    }
+
     const user = await User.create({
       first_name,
       last_name,

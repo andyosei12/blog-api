@@ -23,7 +23,6 @@ const getBlogs = async (reqQuery = {}, userId = null) => {
       items: blogs,
     };
   } catch (error) {
-    console.log(error.message);
     return {
       code: 500,
       error: error.message,
@@ -32,19 +31,27 @@ const getBlogs = async (reqQuery = {}, userId = null) => {
 };
 
 const saveBlog = async (blog) => {
+  const blogTitle = blog.title;
   try {
-    const newBlog = await BlogModel.create(blog);
-    return {
-      code: 201,
-      data: newBlog,
-    };
-  } catch (error) {
-    if (error.code === 11000) {
+    const existingBlog = await BlogModel.findOne({
+      user_id: blog.user_id,
+      title: blogTitle,
+    }).collation({
+      locale: 'en',
+      strength: 2,
+    });
+    if (existingBlog) {
       return {
         code: 409,
         error: 'Blog already exists',
       };
     }
+    const newBlog = await BlogModel.create({ ...blog });
+    return {
+      code: 201,
+      blog: newBlog,
+    };
+  } catch (error) {
     return {
       code: 500,
       error: error.message,

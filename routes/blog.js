@@ -19,9 +19,10 @@ router.patch('/:id', verifyUser, updateBlog);
 router.patch('/:id/status', verifyUser, updateBlogState);
 router.delete('/:id', verifyUser, deleteBlog);
 
-router.get('*', (req, res) => {
+router.all('*', (req, res) => {
   res.status(404).json({
-    message: 'Route not found',
+    status: 'fail',
+    message: `${req.originalUrl} was not found on this server`,
   });
 });
 
