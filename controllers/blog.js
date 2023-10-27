@@ -40,6 +40,7 @@ const createBlog = catchAsync(async (req, res, next) => {
 // Get all blogs
 const getAllBlogs = catchAsync(async (req, res, next) => {
   logger.info('Getting all blogs');
+  // Getting all published blogs
   const features = new APIFeatures(BlogModel.find(), req.query)
     .filter({ state: 'published' })
     .sort()
@@ -53,9 +54,12 @@ const getAllBlogs = catchAsync(async (req, res, next) => {
   });
 });
 
+// Get a blog by id
 const getBlogById = catchAsync(async (req, res, next) => {
   logger.info('Getting a blog by id');
   const blogId = req.params.id;
+
+  // Incrementing the blog read count
   const blog = await BlogModel.findOneAndUpdate(
     { _id: blogId },
     { $inc: { read_count: 1 } },
@@ -69,6 +73,7 @@ const getBlogById = catchAsync(async (req, res, next) => {
   });
 });
 
+// Update a blog
 const updateBlog = catchAsync(async (req, res, next) => {
   logger.info('Updating a blog');
   const userId = req.userId;
@@ -94,6 +99,7 @@ const updateBlog = catchAsync(async (req, res, next) => {
   });
 });
 
+// Update a blog state
 const updateBlogState = catchAsync(async (req, res, next) => {
   logger.info('Updating a blog state');
   const userId = req.userId;
@@ -118,6 +124,7 @@ const updateBlogState = catchAsync(async (req, res, next) => {
   });
 });
 
+// Delete a blog
 const deleteBlog = catchAsync(async (req, res, next) => {
   logger.info('Deleting a blog');
   const userId = req.userId;

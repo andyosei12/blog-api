@@ -36,11 +36,15 @@ const loginUser = catchAsync(async (req, res, next) => {
     const err = new AppError('User does not exist. Try signing up', 404);
     return next(err);
   }
+
+  // Validate user password
   const validPassword = await user.isValidPassword(passwordInput);
   if (!validPassword) {
     const err = new AppError('Email or password is not correct', 401);
     return next(err);
   }
+
+  // Create a jwt token
   const token = createToken(user);
   return res.status(200).json({
     message: 'Login successfully',
@@ -49,6 +53,7 @@ const loginUser = catchAsync(async (req, res, next) => {
   });
 });
 
+// Get all blogs created by a user
 const getAuthUserBlogs = catchAsync(async (req, res, next) => {
   logger.info('(User) => getAuthUserBlogs process started');
   const userId = req.userId;
