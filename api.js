@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const userRouter = require('./routes/user');
 const blogRouter = require('./routes/blog');
 const viewsRouter = require('./views/views.router');
+const globalErrorHandler = require('./controllers/errorController');
 
 const app = express();
 app.use(morgan('dev'));
@@ -18,12 +19,6 @@ app.use('/api/v1/blogs', blogRouter);
 app.use('/', viewsRouter);
 
 // globah error handler
-app.use((err, req, res, next) => {
-  res.status(500).json({
-    data: null,
-    error: 'Server Error',
-    message: err.message,
-  });
-});
+app.use(globalErrorHandler);
 
 module.exports = app;

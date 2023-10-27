@@ -3,7 +3,7 @@ const Joi = require('joi');
 const validateLogin = async (req, res, next) => {
   const schema = Joi.object({
     email: Joi.string().required(),
-    password: Joi.string().min(8).required(),
+    password: Joi.string().required(),
   });
 
   try {

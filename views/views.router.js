@@ -124,7 +124,6 @@ router.get('/blogs', async (req, res) => {
 
 // route to create a new blog
 router.get('/user/blogs/new', async (req, res) => {
-  console.log('helloo');
   res.render('new-blog', { pageTitle: 'Curated | New Blog', error: null });
 });
 

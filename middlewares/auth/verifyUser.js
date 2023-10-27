@@ -18,7 +18,7 @@ const verifyUser = (req, res, next) => {
       });
     }
     req.userId = user.id;
-    req.username = user.first_name + ' ' + user.last_name;
+    req.username = user.firstName + ' ' + user.lastName;
     next();
   } catch (error) {
     return res.status(401).json({
